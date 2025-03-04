@@ -1,83 +1,40 @@
-# todos-express-password
+﻿
+![](http://images.restapi.co.za/pvt/Noroff-64.png)
+# Noroff
+## Back-end Development Year 1
+### DAB Project Authentication Hotel Management
+NOTE: Remember to create the .env file with the information for your database. The username, password, database and host information needs to be in the .env file.
 
-This app illustrates how to use [Passport](https://www.passportjs.org/) with
-[Express](https://expressjs.com/) to sign users in with a username and password.
-Use this example as a starting point for your own web applications.
+### Setup the database with initial data
+Insert default values with no users
 
-## Quick Start
-
-To run this app, clone the repository and install dependencies:
-
-```bash
-$ git clone https://github.com/passport/todos-express-password.git
-$ cd todos-express-password
-$ npm install
+```sql
+INSERT INTO Hotels (Name, Location)
+VALUES ('Street Motel', 'Chicago');
+```
+```sql
+INSERT INTO Hotels (Name, Location)
+VALUES ('Mariott', 'Warshaw');
+```
+```sql
+INSERT INTO Rooms (Capacity, PricePerDay, HotelId)
+VALUES (2, 22.50, 1),(4, 40, 1);
+```
+```sql
+INSERT INTO Rates (UserId, HotelId, Value)
+VALUES (1, 1, 4);
+```
+```sql
+INSERT INTO Reservations (UserId, RoomId, StartDate, EndDate)
+VALUES (1, 1, '2022-11-11 10:00:00', '2022-11-14 10:00:00');
 ```
 
-Then start the server.
 
-```bash
-$ npm start
+### Stored procedure
+```sql
+CREATE PROCEDURE `insert_reservation` (_UserId INT, _RoomId INT, _StartDate DATETIME, _EndDate DATETIME)
+BEGIN
+INSERT INTO Reservations SET UserId = _UserId, StartDate = _StartDate, EndDate = _EndDate, RoomId = _RoomId
+ON DUPLICATE KEY UPDATE StartDate = _StartDate, EndDate = _EndDate;
+END
 ```
-
-Navigate to [`http://localhost:3000`](http://localhost:3000).
-
-## Tutorial
-
-Follow along with the step-by-step [Username & Password Tutorial](https://www.passportjs.org/tutorials/password/)
-to learn how this app was built.
-
-## Overview
-
-This app illustrates how to build a todo app with sign in functionality using
-Express, Passport, and the [`passport-local`](https://www.passportjs.org/packages/passport-local/)
-strategy.
-
-This app is a traditional web application, in which application logic and data
-persistence resides on the server.  HTML pages and forms are rendered by the
-server and client-side JavaScript is not utilized (or kept to a minimum).
-
-This app is built using the Express web framework.  Data is persisted to a
-[SQLite](https://www.sqlite.org/) database.  HTML pages are rendered using [EJS](https://ejs.co/)
-templates, and are styled using vanilla CSS.
-
-When a user first arrives at this app, they are prompted to sign in.  Once
-authenticated, a login session is established and maintained between the server
-and the user's browser with a cookie.
-
-After signing in, the user can view, create, and edit todo items.  Interaction
-occurs by clicking links and submitting forms, which trigger HTTP requests.
-The browser automatically includes the cookie set during login with each of
-these requests.
-
-When the server receives a request, it authenticates the cookie and restores the
-login session, thus authenticating the user.  It then accesses or stores records
-in the database associated with the authenticated user.
-
-## Next Steps
-
-* Extend with credential management.
-
-  Study [todos-express-password-credential-management](https://github.com/passport/todos-express-password-credential-management)
-  to learn how to use the [Credential Managment](https://www.w3.org/TR/credential-management-1/)
-  API to help the user store and select their password.
-
-* Add social login.
-
-  Study [todos-express-google](https://github.com/passport/todos-express-google)
-  to learn how to let users sign in with their social network account, using
-  their existing profile and avoiding the need to sign up and repeatedly enter
-  account details.
-
-* Add passwordless.
-
-  Study [todos-express-webauthn](https://github.com/passport/todos-express-webauthn)
-  to learn how to let users sign in with biometrics or a security key.
-
-## License
-
-[The Unlicense](https://opensource.org/licenses/unlicense)
-
-## Credit
-
-Created by [Jared Hanson](https://www.jaredhanson.me/)
